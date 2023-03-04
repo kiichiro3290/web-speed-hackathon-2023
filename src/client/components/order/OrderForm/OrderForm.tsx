@@ -1,8 +1,8 @@
 import { useFormik } from 'formik';
-import _ from 'lodash';
+// import _ from 'lodash';
 import type { ChangeEventHandler, FC } from 'react';
-import zipcodeJa from 'zipcode-ja';
 
+import { zipCodeApi } from '../../../utils/zipcode_client';
 import { PrimaryButton } from '../../foundation/PrimaryButton';
 import { TextInput } from '../../foundation/TextInput';
 
@@ -30,16 +30,22 @@ export const OrderForm: FC<Props> = ({ onSubmit }) => {
     onSubmit,
   });
 
-  const handleZipcodeChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+  const handleZipcodeChange: ChangeEventHandler<HTMLInputElement> = async (event) => {
     formik.handleChange(event);
 
     const zipCode = event.target.value;
-    const address = [...(_.cloneDeep(zipcodeJa)[zipCode]?.address ?? [])];
-    const prefecture = address.shift();
-    const city = address.join(' ');
+    // const address = [...(_.cloneDeep(zipcodeJa)[zipCode]?.address ?? [])];
 
-    formik.setFieldValue('prefecture', prefecture);
-    formik.setFieldValue('city', city);
+    // fetch API を使って郵便局のAPIを叩く
+    // 郵便番号が正しく入力されたときにだけAPIを叩く
+    if (zipCode.length === 7) {
+      const data = await zipCodeApi.fetchZipCode(zipCode);
+      const prefecture = data.address1;
+      const city = `${data.address2}${data.address3}`;
+
+      formik.setFieldValue('prefecture', prefecture);
+      formik.setFieldValue('city', city);
+    }
   };
 
   return (

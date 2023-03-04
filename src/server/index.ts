@@ -15,6 +15,7 @@ import { dataSource } from './data_source';
 import { initializeApolloServer } from './graphql';
 import { initializeDatabase } from './utils/initialize_database';
 import { rootResolve } from './utils/root_resolve';
+import { fetchZipCode } from './zipcode';
 
 const PORT = Number(process.env.PORT ?? 8080);
 
@@ -24,6 +25,19 @@ async function init(): Promise<void> {
 
   const app = new Koa();
   const httpServer = http.createServer(app.callback());
+
+  // 郵便局のAPIを叩く
+  app.use(
+    route.get(
+      '/zipcode', async (ctx) => {
+        const zipCode = ctx.request.query['zipcode'] ?? ''
+        const data = await fetchZipCode(zipCode as string)
+        console.log(data)
+        ctx.body = {results: data.results[0]}
+        return 
+      }
+    )
+  )
 
   app.keys = ['cookie-key'];
   app.use(logger());
