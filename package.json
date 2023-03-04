@@ -5,6 +5,7 @@
     "start": "npm-run-all -p start:client start:server",
     "start:client": "cross-env NODE_ENV=development vite build --watch",
     "start:server": "nodemon --watch src/server --ext 'ts,tsx' --exec 'ts-node src/server'",
+    "test": "cross-env SEED_BASE_UNIXTIME=1677855600000 ts-node tools/test.ts",
     "build": "npm-run-all -s build:tsc build:vite",
     "build:tsc": "tsc",
     "build:vite": "cross-env NODE_ENV=development vite build",
@@ -13,7 +14,7 @@
     "format:eslint": "eslint ./ --fix --ext .js,.jsx,.ts,.tsx",
     "format:stylelint": "stylelint --ignore-path .gitignore --fix './**/styles.{js,ts}' './**/*.styles.{js,ts}' './**/*.css'",
     "seed": "npm-run-all -s clear:database seed:database",
-    "seed:database": "cross-env SEED_BASE_UNIXTIME=1677855600 ts-node tools/seed.ts",
+    "seed:database": "cross-env SEED_BASE_UNIXTIME=1677855600000 ts-node tools/seed.ts",
     "clear:database": "rm -f ./databases/database.sqlite"
   },
   "dependencies": {

@@ -252,9 +252,9 @@ async function seedProducts({ mediaList }: { mediaList: MediaFile[] }): Promise<
             const offer = new LimitedTimeOffer();
             offer.product = product;
             // offer.startDate = startDate.toInstant().toString({ timeZone: Temporal.TimeZone.from('UTC') });
-            offer.startDate = tmpStartDate
+            offer.startDate = tmpStartDate.toString()
             // offer.endDate = endDate.toInstant().toString({ timeZone: Temporal.TimeZone.from('UTC') });
-            offer.endDate = tmpEndDate
+            offer.endDate = tmpEndDate.toString()
             offer.price = Math.floor(product.price * (1 - discountRate));
             offers.push(offer);
           }
@@ -297,7 +297,6 @@ async function seedFeatureSections({ products }: { products: Product[] }): Promi
   }
 }
 
-// データベースにユーザのレビューを追加する部分
 async function seedReviews({ products, users }: { users: User[]; products: Product[] }): Promise<void> {
   const reviews: Review[] = [];
 
@@ -328,16 +327,18 @@ async function seedReviews({ products, users }: { users: User[]; products: Produ
   const tmpLastYear = TMP_BASE_DATE.getFullYear() - 1
   const TMP_START_OF_LAST_YEAR = new Date(`${tmpLastYear}-01-01`);
   const tmpDuration = Number(TMP_BASE_DATE) - Number(TMP_START_OF_LAST_YEAR) + (9 * 3600);
-  const tmpInterval = Math.floor(tmpDuration / length);
+  const tmpInterval = Math.floor(tmpDuration/ 1000 / reviews.length);
 
   reviews.forEach((review, index) => {
     // const postedAt = START_OF_LAST_YEAR.add({ seconds: interval * index })
     //   .toInstant()
     //   .toString({ timeZone: Temporal.TimeZone.from('UTC') });
     const tmpPostedAt = new Date(TMP_START_OF_LAST_YEAR)
+    console.log(tmpPostedAt)
     tmpPostedAt.setHours(tmpPostedAt.getHours() - 9)
     tmpPostedAt.setSeconds(tmpPostedAt.getSeconds() + tmpInterval * index)
-    review.postedAt = tmpPostedAt;
+    console.log(tmpPostedAt)
+    review.postedAt = String(Number(tmpPostedAt));
   });
 
   await insert(reviews);

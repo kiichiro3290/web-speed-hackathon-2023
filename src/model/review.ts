@@ -9,7 +9,7 @@ export class Review {
   id!: number;
 
   @Column()
-  postedAt!: Date;
+  postedAt!: string;
 
   @ManyToOne(() => Product, (product) => product.reviews)
   product!: Relation<Product>;

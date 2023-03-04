@@ -14,8 +14,8 @@ export class LimitedTimeOffer {
   price!: number;
 
   @Column()
-  startDate!: Date;
+  startDate!: string;
 
   @Column()
-  endDate!: Date;
+  endDate!: string;
 }
