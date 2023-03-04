@@ -32,9 +32,7 @@ async function init(): Promise<void> {
       '/zipcode', async (ctx) => {
         const zipCode = ctx.request.query['zipcode'] ?? ''
         const data = await fetchZipCode(zipCode as string)
-        console.log(data)
         ctx.body = {results: data.results[0]}
-        return 
       }
     )
   )
@@ -48,6 +46,7 @@ async function init(): Promise<void> {
     ctx.set('Cache-Control', 'no-store');
     await next();
   });
+
 
   const apolloServer = await initializeApolloServer();
   await apolloServer.start();

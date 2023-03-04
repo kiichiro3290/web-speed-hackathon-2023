@@ -1,7 +1,6 @@
 export const zipCodeApi = {
     fetchZipCode: async (zipCode: string) => {
-        const baseUrl = import.meta.env.DEV ? 'http://localhost:8080/zipcode': 'http://misty-waterfall-1519.fly.dev:8080/zipcode';
-
+        const baseUrl = 'zipcode'
         const data = await fetch(`${baseUrl}?zipcode=${zipCode}`, {
         headers: {
             'Content-Type': 'application/json',
@@ -13,8 +12,6 @@ export const zipCodeApi = {
         })
         .then((data) => data.results)
         .catch((e) => console.log(e));
-
-    
         return data
     }
 }

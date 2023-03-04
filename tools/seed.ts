@@ -334,10 +334,8 @@ async function seedReviews({ products, users }: { users: User[]; products: Produ
     //   .toInstant()
     //   .toString({ timeZone: Temporal.TimeZone.from('UTC') });
     const tmpPostedAt = new Date(TMP_START_OF_LAST_YEAR)
-    console.log(tmpPostedAt)
     tmpPostedAt.setHours(tmpPostedAt.getHours() - 9)
     tmpPostedAt.setSeconds(tmpPostedAt.getSeconds() + tmpInterval * index)
-    console.log(tmpPostedAt)
     review.postedAt = String(Number(tmpPostedAt));
   });
 

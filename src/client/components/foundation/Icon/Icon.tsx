@@ -19,7 +19,6 @@ type Icons = 'FaShoppingCart' | 'FaArrowLeft' | 'FaArrowRight' | 'FaUser' | 'FaP
 
 // パスカルケースをケバブケースにする
 const PascalToKebab = (pascal: string) => {
-  console.log(PascalToKebab);
   return pascal
     .replace(/[A-Z]/g, (searchStr: string) => {
       return '-' + searchStr.charAt(0).toLowerCase();
