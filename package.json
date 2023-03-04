@@ -24,7 +24,6 @@
     "@emotion/css": "11.10.5",
     "@koa/router": "12.0.0",
     "@types/koa-session": "5.10.6",
-    "axios": "1.3.4",
     "bcrypt": "5.1.0",
     "classnames": "2.3.2",
     "core-js": "3.29.0",
@@ -56,7 +55,6 @@
     "styled-components": "5.3.6",
     "throttle-debounce": "5.0.0",
     "typeorm": "0.3.11",
-    "zipcode-ja": "0.0.7",
     "zod": "3.20.6"
   },
   "devDependencies": {
