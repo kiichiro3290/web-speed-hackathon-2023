@@ -1,6 +1,5 @@
 import path from 'node:path';
 
-import { Temporal } from '@js-temporal/polyfill';
 import * as bcrypt from 'bcrypt';
 
 import { FeatureItem } from '../src/model/feature_item';
@@ -21,10 +20,13 @@ import { DATABASE_SEED_PATH } from '../src/server/utils/database_paths';
 import { hakusai, kyuri } from './aozora';
 import { getFileList } from './get_file_list';
 
-const TZ = process.env.TZ ?? 'Asia/Tokyo';
-const BASE_DATE = process.env.SEED_BASE_UNIXTIME
-  ? Temporal.Instant.fromEpochMilliseconds(Number(process.env.SEED_BASE_UNIXTIME))
-  : Temporal.Now.instant();
+// const TZ = process.env.TZ ?? 'Asia/Tokyo';
+// const BASE_DATE = process.env.SEED_BASE_UNIXTIME
+//   ? Temporal.Instant.fromEpochMilliseconds(Number(process.env.SEED_BASE_UNIXTIME))
+//   : Temporal.Now.instant();
+
+// tmp
+const TMP_BASE_DATE = process.env.SEED_BASE_UNIXTIME ? new Date(Number(process.env.SEED_BASE_UNIXTIME)) : new Date()
 
 const familyNames = [
   { display: '宮森', name: 'miyamori' },
@@ -231,18 +233,28 @@ async function seedProducts({ mediaList }: { mediaList: MediaFile[] }): Promise<
         if (index % 3 === 0) {
           const offerHour = index % 24;
           for (let offset = -10; offset <= 10; offset++) {
-            const startDate = BASE_DATE.toZonedDateTimeISO(TZ).add({ days: offset }).withPlainTime({
-              hour: offerHour,
-              minute: 0,
-              second: 0,
-            });
-            const endDate = startDate.add({ hours: 2 });
+            // const startDate = BASE_DATE.toZonedDateTimeISO(TZ).add({ days: offset }).withPlainTime({
+            //   hour: offerHour,
+            //   minute: 0,
+            //   second: 0,
+            // });
+            // const endDate = startDate.add({ hours: 2 });
             const discountRate = discountRates[(index + Math.abs(offset)) % discountRates.length];
+
+            // tmp
+            const tmpStartDate = new Date(TMP_BASE_DATE)
+            tmpStartDate.setDate(tmpStartDate.getDate() + offset)
+            tmpStartDate.setHours(offerHour)
+            const tmpEndDate = new Date(TMP_BASE_DATE)
+            tmpEndDate.setDate(tmpEndDate.getDate() + offset)
+            tmpEndDate.setHours(offerHour + 2)
 
             const offer = new LimitedTimeOffer();
             offer.product = product;
-            offer.startDate = startDate.toInstant().toString({ timeZone: Temporal.TimeZone.from('UTC') });
-            offer.endDate = endDate.toInstant().toString({ timeZone: Temporal.TimeZone.from('UTC') });
+            // offer.startDate = startDate.toInstant().toString({ timeZone: Temporal.TimeZone.from('UTC') });
+            offer.startDate = tmpStartDate
+            // offer.endDate = endDate.toInstant().toString({ timeZone: Temporal.TimeZone.from('UTC') });
+            offer.endDate = tmpEndDate
             offer.price = Math.floor(product.price * (1 - discountRate));
             offers.push(offer);
           }
@@ -285,6 +297,7 @@ async function seedFeatureSections({ products }: { products: Product[] }): Promi
   }
 }
 
+// データベースにユーザのレビューを追加する部分
 async function seedReviews({ products, users }: { users: User[]; products: Product[] }): Promise<void> {
   const reviews: Review[] = [];
 
@@ -304,18 +317,27 @@ async function seedReviews({ products, users }: { users: User[]; products: Produ
     }
   }
 
-  const START_OF_LAST_YEAR = BASE_DATE.toZonedDateTimeISO(TZ)
-    .subtract({ years: 1 })
-    .with({ day: 1, month: 1 })
-    .withPlainTime();
-  const duration = BASE_DATE.since(START_OF_LAST_YEAR.toInstant()).round('second').total('second');
-  const interval = Math.floor(duration / reviews.length);
+  // const START_OF_LAST_YEAR = BASE_DATE.toZonedDateTimeISO(TZ)
+  //   .subtract({ years: 1 })
+  //   .with({ day: 1, month: 1 })
+  //   .withPlainTime();
+  // const duration = BASE_DATE.since(START_OF_LAST_YEAR.toInstant()).round('second').total('second');
+  // const interval = Math.floor(duration / reviews.length);
+
+  // tmp
+  const tmpLastYear = TMP_BASE_DATE.getFullYear() - 1
+  const TMP_START_OF_LAST_YEAR = new Date(`${tmpLastYear}-01-01`);
+  const tmpDuration = Number(TMP_BASE_DATE) - Number(TMP_START_OF_LAST_YEAR) + (9 * 3600);
+  const tmpInterval = Math.floor(tmpDuration / length);
 
   reviews.forEach((review, index) => {
-    const postedAt = START_OF_LAST_YEAR.add({ seconds: interval * index })
-      .toInstant()
-      .toString({ timeZone: Temporal.TimeZone.from('UTC') });
-    review.postedAt = postedAt;
+    // const postedAt = START_OF_LAST_YEAR.add({ seconds: interval * index })
+    //   .toInstant()
+    //   .toString({ timeZone: Temporal.TimeZone.from('UTC') });
+    const tmpPostedAt = new Date(TMP_START_OF_LAST_YEAR)
+    tmpPostedAt.setHours(tmpPostedAt.getHours() - 9)
+    tmpPostedAt.setSeconds(tmpPostedAt.getSeconds() + tmpInterval * index)
+    review.postedAt = tmpPostedAt;
   });
 
   await insert(reviews);
