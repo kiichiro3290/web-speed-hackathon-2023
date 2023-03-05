@@ -29,7 +29,13 @@ export const ProductCard: FC<Props> = ({ product }) => {
               <Image height={126} src={thumbnailFile.filename} width={224} />
             </AspectRatio>
           </div>
-        ) : null}
+        ) : (
+          <div className={styles.image()}>
+            <AspectRatio ratioHeight={9} ratioWidth={16}>
+              <div />
+            </AspectRatio>
+          </div>
+        )}
         <div className={styles.description()}>
           <p className={styles.itemName()}>{product.name}</p>
           <span className={styles.itemPrice()}>{currencyFormatter.format(price, { code: 'JPY', precision: 0 })}</span>

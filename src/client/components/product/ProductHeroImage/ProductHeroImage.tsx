@@ -19,7 +19,13 @@ export const ProductHeroImage: FC<Props> = memo(({ product, title }) => {
   const thumbnailFile = product.media.find((productMedia) => productMedia.isThumbnail)?.file;
 
   if (thumbnailFile === undefined) {
-    return null;
+    return (
+      <WidthRestriction>
+        <AspectRatio ratioHeight={9} ratioWidth={16}>
+          <div className={styles.image()} />
+        </AspectRatio>
+      </WidthRestriction>
+    );
   }
 
   return (
