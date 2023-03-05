@@ -48,13 +48,5 @@ export default defineConfig(async () => {
         videos,
       }),
     ],
-    resolve: { 
-      "alias": { 
-        "react": "preact/compat",
-        "react-dom": "preact/compat",
-        "react-dom/test-utils": "preact/test-utils",     // Must be below test-utils
-        "react/jsx-runtime": "preact/jsx-runtime"
-      },
-    },
   };
 });
