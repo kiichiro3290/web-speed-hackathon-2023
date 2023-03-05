@@ -24,8 +24,8 @@ export default defineConfig(async () => {
 
   return {
     build: {
-      assetsInlineLimit: 20480,
-      cssCodeSplit: false,
+      assetsInlineLimit: 20480, //これいる？
+      cssCodeSplit: true,
       cssTarget: 'es6',
       minify: true,
       rollupOptions: {
@@ -48,5 +48,13 @@ export default defineConfig(async () => {
         videos,
       }),
     ],
+    resolve: { 
+      "alias": { 
+        "react": "preact/compat",
+        "react-dom": "preact/compat",
+        "react-dom/test-utils": "preact/test-utils",     // Must be below test-utils
+        "react/jsx-runtime": "preact/jsx-runtime"
+      },
+    },
   };
 });
