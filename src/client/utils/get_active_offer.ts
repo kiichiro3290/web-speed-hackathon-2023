@@ -11,7 +11,7 @@ export function getActiveOffer(
     // return window.Temporal.Instant.compare(startDate, now) < 0 && window.Temporal.Instant.compare(now, endDate) < 0;
     
     // tmp
-    const now = new Date();
+    const now = String(Number(Date.now()));
     const startDate = offer.startDate;
     const endDate = offer.endDate;
 

@@ -58,7 +58,7 @@ export const mutationResolver: MutationResolver = {
 
     // const postedAt = Temporal.Now.instant().toString({ timeZone: Temporal.TimeZone.from('UTC') });
     // tmp
-    const postedAt = Date();
+    const postedAt = String(Number(Date.now()));
 
     await dataSource.manager.save(
       dataSource.manager.create(Review, {
