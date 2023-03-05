@@ -4,7 +4,7 @@ export const inner = () => css`
   display: flex;
   flex-direction: column;
   gap: 24px;
-  justify-content: conter;
+  justify-content: center;
   padding: 24px;
 `;
 
