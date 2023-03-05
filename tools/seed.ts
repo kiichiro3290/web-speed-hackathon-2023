@@ -109,6 +109,8 @@ const descriptions = [kyuri, hakusai];
 const discountRates = [0.05, 0.1, 0.15, 0.2, 0.3, 0.5];
 
 // https://github.com/lodash/lodash/blob/2da024c3b4f9947a48517639de7560457cd4ec6c/chunk.js
+// lodash→jsに置き換えが難しそうな箇所を置き換えてくれてる
+// lodashのソースからコピペしてくるのありやな
 function chunk<T>(array: T[], size: number): T[][] {
   const length = array.length;
   let index = 0;
